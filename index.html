@@ -16,7 +16,7 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
-    background: #1A1410; /* fallback color while iframe loads */
+    background: #1A1410;
   }
   iframe {
     position: fixed;
@@ -27,14 +27,37 @@
     border: none;
     display: block;
   }
+
+  /* iOS portrait lock fallback — rotates content back when device is landscape */
+  @media screen and (orientation: landscape) and (max-width: 1024px) {
+    body {
+      transform: rotate(-90deg);
+      transform-origin: left top;
+      width: 100vh;
+      height: 100vw;
+      overflow: hidden;
+      position: absolute;
+      top: 100%;
+      left: 0;
+    }
+  }
 </style>
 </head>
 <body>
   <iframe
     id="app-frame"
-    src="https://script.google.com/macros/s/AKfycbxBBenYBPQnXWljUi350HQONzm68g1xpcHYlowJJlCLuWkQfWi9wRihLeqCsQJ6V8fL/exec"
+    src="https://script.google.com/macros/s/AKfycbw10tEQCp4iQs5TmCcxsQ_Pv24NeWYv-7lwHsEW9hYe55kE_gETVYdizkMzUTJHzGO9/exec"
     title="Brenneman Recipe Masterlist"
     allow="clipboard-write"
   ></iframe>
+
+  <script>
+    // Lock to portrait using Screen Orientation API (Android Chrome, some browsers)
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('portrait').catch(() => {
+        // Silently fail — CSS fallback handles it
+      });
+    }
+  </script>
 </body>
 </html>
